@@ -57,7 +57,7 @@ project "curl"
 		defines { "_WINDOWS" }
 
 	filter "system:linux"
-		defines { "CURL_HIDDEN_SYMBOLS", "HAVE_UNISTD_H" }
+		defines { "CURL_HIDDEN_SYMBOLS", "HAVE_UNISTD_H", "USE_MBEDTLS" }
 
 		-- find the location of the ca bundle
 		local ca = nil
