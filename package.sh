@@ -10,7 +10,7 @@ GENIE="tools/$OS/premake5"$EXE
 MAKE="make -j$(nproc) --no-print-directory"
 
 OUT=dist
-INCLUDE_OUT="$OUT/include"
+INCLUDE_OUT="$OUT/include/curl"
 INFO_OUT="$OUT/README.md"
 
 pushd() {
@@ -21,8 +21,10 @@ popd() {
     command popd "$@" &> /dev/null
 }
 
-rm -rf .build
-rm -rf dist
+rm -rf   .build
+rm -rf   dist
+rm -rf   $INCLUDE_OUT
+mkdir -p $INCLUDE_OUT
 
 $GENIE clean
 $GENIE gmake
@@ -32,9 +34,7 @@ $MAKE config=debug
 $MAKE config=release
 popd
 
-rm -rf   $INCLUDE_OUT
-mkdir -p $INCLUDE_OUT
 cp curl/include/curl/*.h $INCLUDE_OUT
+cp template.md           $INFO_OUT
 
-cp template.md $INFO_OUT
 git submodule >> $INFO_OUT
