@@ -1,5 +1,5 @@
 local DIST_DIR = "./dist"
-local PROJECTS_DIR = ".build"
+local PROJECTS_DIR = ".build/projects"
 local TARGET_DIR = path.join(DIST_DIR, "lib", _TARGET_OS.."_x64")
 
 os.copyfile("config_".._TARGET_OS..".h", "curl/lib/curl_config.h")
@@ -55,6 +55,9 @@ project "curl"
 
 	filter "system:windows"
 		defines { "_WINDOWS" }
+
+	filter { "system:macosx" }
+		defines { "USE_DARWINSSL", "USE_MBEDTLS" }
 
 	filter "system:linux"
 		defines { "CURL_HIDDEN_SYMBOLS", "HAVE_UNISTD_H", "USE_MBEDTLS" }

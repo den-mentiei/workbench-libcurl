@@ -3,11 +3,26 @@
 set -e
 
 # TODO: other platforms handling.
+case "$(uname -s)" in
+    Darwin)
+	OS="darwin"
+	TARGET_DIR="bgfx/.build/macosx/bin"
+	PROJECTS_DIR=".build/projects/macosx"
+	PROC=`sysctl -n hw.ncpu`
+	;;
+    Linux)
+	OS="linux"
+	PROJECTS_DIR=".build/projects/gmake-linux"
+	PROC=`nproc`
+	;;
+    *)
+	echo "Unknown OS, exiting."
+	exit 1
+esac
 
-OS="linux"
 EXE=""
-GENIE="tools/$OS/premake5"$EXE
-MAKE="make -j$(nproc) --no-print-directory"
+PREMAKE="tools/$OS/premake5"$EXE
+MAKE="make -j$PROC --no-print-directory"
 
 OUT=dist
 INCLUDE_OUT="$OUT/include/curl"
@@ -26,10 +41,11 @@ rm -rf   dist
 rm -rf   $INCLUDE_OUT
 mkdir -p $INCLUDE_OUT
 
-$GENIE clean
-$GENIE gmake
+# TODO: Make it work -- not supported yet on macOS.
+$PREMAKE clean
+$PREMAKE gmake
 
-pushd .build/$OS
+pushd $PROJECTS_DIR
 $MAKE config=debug
 $MAKE config=release
 popd
